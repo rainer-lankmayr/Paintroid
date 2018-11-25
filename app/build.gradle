@@ -19,6 +19,10 @@
 
 apply plugin: 'com.android.application'
 
+if (!project.hasProperty("signingKeystore")) {
+    ext.signingKeystore = "dummyKeystore"
+}
+
 android {
     compileSdkVersion rootProject.ext.androidCompileSdkVersion
     defaultConfig {
@@ -29,11 +33,33 @@ android {
         versionCode rootProject.ext.androidVersionCode
         versionName rootProject.ext.androidVersionName
     }
+
+    signingConfigs {
+        signedRelease {
+            // credentials loaded in release_task.gradle
+            storeFile file(project["signingKeystore"])
+            storePassword ""
+            keyAlias ""
+            keyPassword ""
+        }
+    }
+
+    if (project.hasProperty("signingKeystore") && project.hasProperty("signingKeystorePassword") &&
+            project.hasProperty("signingKeyAlias") && project.hasProperty("signingKeyPassword")) {
+        android.signingConfigs.signedRelease.storePassword = project.getProperties().get("signingKeystorePassword")
+        android.signingConfigs.signedRelease.keyAlias = project.getProperties().get("signingKeyAlias")
+        android.signingConfigs.signedRelease.keyPassword = project.getProperties().get("signingKeyPassword")
+    }
+
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        signedRelease.initWith(buildTypes.release)
+        signedRelease {
+            signingConfig signingConfigs.signedRelease
         }
     }
 }
