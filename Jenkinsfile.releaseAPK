@@ -47,7 +47,7 @@ pipeline {
 		stage('Prepare build') {
 			steps {
 				script {
-					currentBuild.displayName = "#${env.BUILD_NUMBER} | ${env.flavor} | ${env.gitBranch}"
+					currentBuild.displayName = "#${env.BUILD_NUMBER} | ${env.gitBranch}"
 				}
 			}
 		}
