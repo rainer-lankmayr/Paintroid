@@ -83,11 +83,4 @@ RUN if [ ! -z "$SDKMANAGER_PACKAGES" ]; then yes | $_SDKMANAGER $SDKMANAGER_PACK
 # Installing Fastlane
 # -----------------------
 #
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        rubygems \
-        ruby-dev \
-        g++ \
-        make \
-        less \
-    && gem update --system \
-    && gem install fastlane -NV
+RUN apt-get update
